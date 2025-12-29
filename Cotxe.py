@@ -27,7 +27,7 @@ class Cotxe:
 
         return (punts_rotats_poligon,punts_rotats_recta)
     
-    def comprovaSiEstemDins(self, carretera):
+    def comprovaSiEstemDins(self, carretera,njug=1):
         punts = self.calculaPunts()
         for tram in carretera:
             count = 0
@@ -50,8 +50,12 @@ class Cotxe:
 
         else:
             if count_global == 4:
-                self.colour = 'pink'
-                self.temps_fora_carretera = 0.00
+                if njug == 1:
+                    self.colour = 'pink'
+                    self.temps_fora_carretera = 0.00
+                else:
+                    self.colour = 'blue'
+                    self.temps_fora_carretera = 0.00
             else:
                 if self.temps_fora_carretera == 0.00:
                     self.temps_fora_carretera = time.time()
@@ -104,6 +108,7 @@ class Cotxe:
                     return True
                 
         return False
+
                     
     def respawn_cotxe(self):
         angle = 90 + self.ultim_tram.a
@@ -120,14 +125,18 @@ class Cotxe:
             if par==-1:
                 self.a = self.a - 5
     
-    def mou_translacio_huma(self,par,carretera,cotxes_automatics,trams_visitats,w,wv):
+    def mou_translacio_huma(self,par,carretera,cotxes_automatics,trams_visitats,w,wv,njug=0,cotxe_huma_alt = None):
         posicio_antiga = self.pos.copy()
-        self.comprovaSiEstemDins(carretera)
+        self.comprovaSiEstemDins(carretera,njug)
         if self.ultim_tram is not None:
             i = self.ultim_tram.id - 1
             trams_visitats[i] = True
             if self.colisioCotxes(cotxes_automatics):
                 self.respawn_cotxe()
+            if cotxe_huma_alt is not None:
+                if self.colisioCotxes(cotxe_huma_alt):
+                    cotxe_huma_alt[0].respawn_cotxe()
+
         if par==1:
             if self.v<=10:
                 self.v = self.v + 0.15
