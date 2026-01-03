@@ -12,9 +12,11 @@ class Cotxe:
         self.v=v
         self.pos = np.array([x,y])
         self.colour = colour
+        self.colour_outline = 'black'
         self.ultim_tram = None
         self.temps_fora_carretera = 0.00
         self.morts = 0
+        self.time = None
 
     def calculaPunts(self):
         a_rad = m.radians(self.a)
@@ -50,19 +52,18 @@ class Cotxe:
 
         else:
             if count_global == 4:
+                self.temps_fora_carretera = 0.00
                 if njug == 1:
-                    self.colour = 'pink'
-                    self.temps_fora_carretera = 0.00
+                    self.colour = 'green'
                 else:
                     self.colour = 'blue'
-                    self.temps_fora_carretera = 0.00
             else:
                 if self.temps_fora_carretera == 0.00:
                     self.temps_fora_carretera = time.time()
 
                 temps_total = time.time() - self.temps_fora_carretera
                 if temps_total >= 5:
-                    self.respawn_cotxe()
+                    self.respawnCotxe()
                     self.temps_fora_carretera = 0.00
                 else:
                     if count_global == 3:
@@ -109,33 +110,49 @@ class Cotxe:
                 
         return False
 
-                    
-    def respawn_cotxe(self):
+
+    def hemRespawnejat(self,njug):
+        if self.time is not None:
+            temps_total = time.time() - self.time
+            if temps_total<= 3:
+                if njug == 1:
+                    self.colour_outline = 'light green'
+                else:
+                    self.colour_outline = 'light blue'
+                return True
+            else:
+                self.colour_outline = 'black'
+        return False
+
+    def respawnCotxe(self):
         angle = 90 + self.ultim_tram.a
         posicio = self.ultim_tram.pos + angleADireccio(angle) * self.ultim_tram.h/2
         self.pos = posicio
         self.v = self.v * 0.2
         self.a = self.ultim_tram.a
         self.morts = self.morts + 1
+        self.time = time.time()
 
-    def mou_gir_huma(self,par):
+    def mouGirHuma(self,par):
         if self.v != 0:
             if par==1:
                 self.a = self.a + 5
             if par==-1:
                 self.a = self.a - 5
     
-    def mou_translacio_huma(self,par,carretera,cotxes_automatics,trams_visitats,w,wv,njug=0,cotxe_huma_alt = None):
+    def mouTranslacioHuma(self,par,carretera,cotxes_automatics,trams_visitats,w,wv,njug=0,cotxe_huma_alt = None):
         posicio_antiga = self.pos.copy()
         self.comprovaSiEstemDins(carretera,njug)
         if self.ultim_tram is not None:
             i = self.ultim_tram.id - 1
             trams_visitats[i] = True
-            if self.colisioCotxes(cotxes_automatics):
-                self.respawn_cotxe()
-            if cotxe_huma_alt is not None:
-                if self.colisioCotxes(cotxe_huma_alt):
-                    cotxe_huma_alt[0].respawn_cotxe()
+            if self.hemRespawnejat(njug) is not True:
+                if self.colisioCotxes(cotxes_automatics):
+                    self.respawnCotxe()
+                if cotxe_huma_alt is not None:
+                    if cotxe_huma_alt[0].hemRespawnejat(njug) is not True:
+                        if cotxe_huma_alt[0].colisioCotxes([self]):
+                            self.respawnCotxe()
 
         if par==1:
             if self.v<=10:
@@ -175,11 +192,11 @@ class Cotxe:
         for p in wTV_punts_poligon:
             punts_finals_poligon.append([p.x,p.y])
 
-        w.create_polygon(punts_finals_poligon,outline='black', fill=self.colour)
+        w.create_polygon(punts_finals_poligon,outline=self.colour_outline, fill=self.colour)
         
         wTV_punts_recta = [wv.worldToViewXY(p[0],p[1]) for p in punts[1]]
         punts_finals_recta = []
         for p in wTV_punts_recta:
             punts_finals_recta.append([p.x,p.y])
 
-        w.create_line(punts_finals_recta)
+        w.create_line(punts_finals_recta,fill = self.colour_outline)

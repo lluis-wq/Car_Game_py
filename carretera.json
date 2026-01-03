@@ -66,12 +66,18 @@
 	"height":10}
 ],
 "human_cars":[
-	{"start_position":{"x":1450,"y":1577},
+	{"start_position":{"x":1450,"y":1589.5},
 	"width":15,
 	"height":10,
 	"angle":0,
 	"velocity":0,
-	"colour":"pink"}
+	"colour":"green"},
+	{"start_position":{"x":1450,"y":1564.5},
+	"width":15,
+	"height":10,
+	"angle":0,
+	"velocity":0,
+	"colour":"blue"}
  	],
 "automatic_cars":[
 	{"start_position":{"x":1750,"y":1564.5},

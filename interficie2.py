@@ -10,14 +10,42 @@ Noms_modes = {
 
 Descripcions = {
     1: "Condueix sense límits ni temps.\nIdeal per practicar.",
-    2: "Completa 1 volta el més ràpid possible.\nBat el teu rècord!",
+    2: "Completa les voltes que triis el més ràpid possible.\nBat el teu rècord!",
     3: "Tens 10 vides.\nSi xoques contra un cotxe o si estàs fora de la carretera per 5 segons,\n perds una vida."
 }
 
+def confirmarVoltes(voltes_seleccionades,finestra_voltes,mode):
+    mode[1] = voltes_seleccionades
+    finestra_voltes.destroy()
+
+
 def destrueixFinestra(mode_escollit, menu, mode):
     mode[0] = mode_escollit
-    print(f"Iniciant {Noms_modes[mode_escollit]}...")
     menu.destroy()
+    if mode_escollit == 2:
+        finestra_voltes = Tk()
+        finestra_voltes.title = ("Selecció de voltes")
+        finestra_voltes.geometry("400x400")
+        finestra_voltes.configure(bg="#1a1a1a")
+        titol = Label(finestra_voltes, text="Selecciona el nombre de voltes que vols fer", font=("Helvetica", 24, "bold"), 
+                   bg="#1a1a1a", fg="#00FF00", pady=20)
+        titol.pack()
+
+        selector = Scale(finestra_voltes, from_=1, to=50, orient=HORIZONTAL, 
+                     bg="#1a1a1a", fg="white", highlightthickness=0, length=200)
+        #selector.set(3) 
+        selector.pack(pady=20)
+
+        Button(finestra_voltes, text="COMENÇAR!", font=("Helvetica", 12, "bold"),
+           bg="#00FF00", fg="black", cursor="hand2",
+           command=lambda: confirmarVoltes(selector.get(), finestra_voltes, mode)).pack(pady=10)
+
+        peu_de_pagina_guia = Label(finestra_voltes, text="Tanqui la finestra per tornar a la selecció de mode", font=("Arial", 10), 
+                   bg="#1a1a1a", fg="gray", pady=20)
+        peu_de_pagina_guia.pack(side=BOTTOM)
+
+        finestra_voltes.mainloop()
+
     if mode_escollit == 4:
         guia = Tk()
         guia.title = ("Guia")
@@ -43,7 +71,7 @@ def crearMenu():
     menu.title("Selecció de Mode")
     menu.geometry("400x400")
     menu.configure(bg="#1a1a1a")
-    mode = [0]
+    mode = [0,0]
 
     titol = Label(menu, text="JOC COTXES", font=("Helvetica", 24, "bold"), 
                    bg="#1a1a1a", fg="#00FF00", pady=20)
@@ -83,4 +111,4 @@ def crearMenu():
 
     menu.mainloop()
 
-    return mode[0]
+    return mode

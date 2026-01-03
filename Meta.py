@@ -18,19 +18,20 @@ class Meta:
     def calculaPunts(self):
         return [(self.x,self.y),(self.x,self.y+self.w),(self.x+self.h,self.y+self.w),(self.x+self.h,self.y)]
     
-    def toquemMeta(self,c):
+    def toquemMeta(self,c,num_voltes):
         punts = c.calculaPunts()
+        marge = 0
+        if num_voltes == self.volta:
+            marge = 5
         for p in punts[0]:
-            np_p = np.array(p)
-            var = np_p - self.pos
-            if 0 <= var[0] <= self.h and 0 <= var[1] <= self.w:
+            if self.x + marge < p[0] < self.x+self.h and self.y < p[1] < self.y+self.w:
                 return True
             
         return False
 
 
-    def voltes(self,c,marcador,trams_visitats,par):
-        tM = self.toquemMeta(c)
+    def voltes(self,c,marcador,trams_visitats,par,num_voltes):
+        tM = self.toquemMeta(c,num_voltes)
         temps_actual = time.time()
         final_mode_carrera = False
         if tM == True:
@@ -40,7 +41,7 @@ class Meta:
                 self.t_inicial_volta = temps_actual
                 trams_visitats = [False for _ in range(12)]
                 self.volta = 1
-            elif self.volta > 0:
+            else:
                 count_trams_visitats = 0
                 for i in range(12):
                     if trams_visitats[i] == True:
@@ -52,7 +53,8 @@ class Meta:
                     self.t_ultima_volta = temps_actual - self.t_inicial_volta
                     self.t_inicial_volta = temps_actual
                     if par == 2:
-                        final_mode_carrera = True
+                        if num_voltes <= self.volta - 1:
+                            final_mode_carrera = True
 
             
         if self.volta>0:
@@ -67,13 +69,13 @@ class Meta:
                     if par == 4:
                         return [4,temps_total_actual,self.volta-1,temps_millor_volta,c.morts]
                 if par == 2 or par == 5:
-                    marcador.configure(text = f" Temps Total: {temps_total_actual}")
-                    if final_mode_carrera == True or par == 5:
-                        return [2,temps_total_actual]
+                    marcador.configure(text = f" Temps Total: {temps_total_actual}\n{self.volta-1}/{num_voltes}")
+                    if final_mode_carrera == True:
+                        return [2,temps_total_actual,self.volta-1]
                 if par == 3 or par == 6:
                     vides = 10 - c.morts
                     marcador.configure(text = f" Temps Total: {temps_total_actual}\nVoltes: {self.volta - 1}\nVides: {vides}")
-                    if vides == 0 or par == 6:
+                    if vides == 0:
                         return [3,self.volta-1]
         return trams_visitats
 
