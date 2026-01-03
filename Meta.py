@@ -8,11 +8,6 @@ class Meta:
         self.w=w
         self.h=h
         self.pos = np.array([x,y])
-        self.volta=0
-        self.t_inicial = 0.00
-        self.t_inicial_volta = 0.00
-        self.t_ultima_volta = 0.00
-        self.t_totes_les_voltes = []
 
 
     def calculaPunts(self):
@@ -21,7 +16,7 @@ class Meta:
     def toquemMeta(self,c,num_voltes):
         punts = c.calculaPunts()
         marge = 0
-        if num_voltes == self.volta:
+        if num_voltes > 0 and num_voltes == c.volta:
             marge = 5
         for p in punts[0]:
             if self.x + marge < p[0] < self.x+self.h and self.y < p[1] < self.y+self.w:
@@ -30,17 +25,23 @@ class Meta:
         return False
 
 
-    def voltes(self,c,marcador,trams_visitats,par,num_voltes):
+    def voltes(self,c,marcador,trams_visitats,par,num_escollit):
+        if par == 2:
+            num_voltes = num_escollit
+        else:
+            num_voltes = 0
+        num_vides = num_escollit
+        
         tM = self.toquemMeta(c,num_voltes)
         temps_actual = time.time()
         final_mode_carrera = False
         if tM == True:
-            if self.volta == 0:
+            if c.volta == 0:
                 print("Comencem la partida")
-                self.t_inicial = temps_actual
-                self.t_inicial_volta = temps_actual
+                c.t_inicial = temps_actual
+                c.t_inicial_volta = temps_actual
                 trams_visitats = [False for _ in range(12)]
-                self.volta = 1
+                c.volta = 1
             else:
                 count_trams_visitats = 0
                 for i in range(12):
@@ -48,35 +49,35 @@ class Meta:
                         count_trams_visitats = count_trams_visitats + 1
 
                 if count_trams_visitats == 12:
-                    self.volta = self.volta + 1
+                    c.volta = c.volta + 1
                     trams_visitats = [False for _ in range(12)]
-                    self.t_ultima_volta = temps_actual - self.t_inicial_volta
-                    self.t_inicial_volta = temps_actual
+                    c.t_ultima_volta = temps_actual - c.t_inicial_volta
+                    c.t_inicial_volta = temps_actual
                     if par == 2:
-                        if num_voltes <= self.volta - 1:
+                        if num_voltes <= c.volta - 1:
                             final_mode_carrera = True
 
             
-        if self.volta>0:
-                temps_total_actual = round(temps_actual - self.t_inicial,2)
-                temps_total_volta = round(temps_actual - self.t_inicial_volta,2)
-                temps_ultima_volta = round(self.t_ultima_volta,2)
-                self.t_totes_les_voltes.append(temps_ultima_volta)
-                temps_millor_volta = max(self.t_totes_les_voltes)
+        if c.volta>0:
+                temps_total_actual = round(temps_actual - c.t_inicial,2)
+                temps_total_volta = round(temps_actual - c.t_inicial_volta,2)
+                temps_ultima_volta = round(c.t_ultima_volta,2)
+                c.t_totes_les_voltes.append(temps_ultima_volta)
+                temps_millor_volta = max(c.t_totes_les_voltes)
                 if par == 1 or par == 4:
-                    marcador.configure(text = f" Temps Total: {temps_total_actual}\n Temps Volta: {temps_total_volta} \nVoltes: {self.volta - 1}\n"
+                    marcador.configure(text = f" Temps Total: {temps_total_actual}\n Temps Volta: {temps_total_volta} \nVoltes: {c.volta - 1}\n"
                                        f"Temps Volta Anterior: {temps_ultima_volta}\nTemps Millor Volta: {temps_millor_volta}\n Morts: {c.morts}")
                     if par == 4:
-                        return [4,temps_total_actual,self.volta-1,temps_millor_volta,c.morts]
+                        return [4,temps_total_actual,c.volta-1,temps_millor_volta,c.morts]
                 if par == 2 or par == 5:
-                    marcador.configure(text = f" Temps Total: {temps_total_actual}\n{self.volta-1}/{num_voltes}")
+                    marcador.configure(text = f" Temps Total: {temps_total_actual}\nVoltes: {c.volta-1}/{num_voltes}")
                     if final_mode_carrera == True:
-                        return [2,temps_total_actual,self.volta-1]
+                        return [2,temps_total_actual,c.volta-1]
                 if par == 3 or par == 6:
-                    vides = 10 - c.morts
-                    marcador.configure(text = f" Temps Total: {temps_total_actual}\nVoltes: {self.volta - 1}\nVides: {vides}")
+                    vides = num_vides - c.morts
+                    marcador.configure(text = f" Temps Total: {temps_total_actual}\nVoltes: {c.volta - 1}\nVides: {vides}")
                     if vides == 0:
-                        return [3,self.volta-1]
+                        return [3,c.volta-1]
         return trams_visitats
 
         

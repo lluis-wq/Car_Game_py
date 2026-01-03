@@ -15,8 +15,13 @@ class Cotxe:
         self.colour_outline = 'black'
         self.ultim_tram = None
         self.temps_fora_carretera = 0.00
+        self.volta = 0
         self.morts = 0
         self.time = None
+        self.t_inicial = 0.00
+        self.t_inicial_volta = 0.00
+        self.t_ultima_volta = 0.00
+        self.t_totes_les_voltes = []
 
     def calculaPunts(self):
         a_rad = m.radians(self.a)

@@ -98,10 +98,10 @@ def animacioMultijugador(par,par_carrera):
     marcador1 = Label(tk1, text="Preparats..., Llestos...", font=("Helvetica", 10, "bold"), 
                  bg="black", fg="light green", bd=2, relief="ridge", padx=10, pady=5)
     marcador1.place(x=550,y=10)
-
-    tanca_joc1 = Label(tk1, text="Premi la tecla 'esc' per sortir", font=("Helvetica", 10, "bold"), 
-                 bg="black", fg="light green", bd=2, relief="ridge", padx=10, pady=5)
-    tanca_joc1.place(x=10,y=10)
+    if par == 1:
+        tanca_joc1 = Label(tk1, text="Premi la tecla 'esc' per sortir", font=("Helvetica", 10, "bold"), 
+                    bg="black", fg="light green", bd=2, relief="ridge", padx=10, pady=5)
+        tanca_joc1.place(x=10,y=10)
 
     marcador2 = Label(tk2, text="Preparats..., Llestos...", font=("Helvetica", 10, "bold"), 
                  bg="black", fg="light green", bd=2, relief="ridge", padx=10, pady=5)

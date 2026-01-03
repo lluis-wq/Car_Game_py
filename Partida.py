@@ -14,6 +14,9 @@ def partida():
         elif mode_escollit[0] == 4:
             continue
         else:
+            if mode_escollit[1] == 0:
+                break
+            
             if num_jugadors == 1:
                 dades_finals = animacio(mode_escollit[0],mode_escollit[1])
             else:

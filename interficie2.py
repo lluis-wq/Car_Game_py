@@ -11,12 +11,12 @@ Noms_modes = {
 Descripcions = {
     1: "Condueix sense límits ni temps.\nIdeal per practicar.",
     2: "Completa les voltes que triis el més ràpid possible.\nBat el teu rècord!",
-    3: "Tens 10 vides.\nSi xoques contra un cotxe o si estàs fora de la carretera per 5 segons,\n perds una vida."
+    3: "Tens les vides que vulguis.\nSi xoques contra un cotxe o si estàs fora de la carretera per 5 segons,\n perds una vida."
 }
 
-def confirmarVoltes(voltes_seleccionades,finestra_voltes,mode):
-    mode[1] = voltes_seleccionades
-    finestra_voltes.destroy()
+def confirmarVoltes(coses_seleccionades,finestra,mode):
+    mode[1] = coses_seleccionades
+    finestra.destroy()
 
 
 def destrueixFinestra(mode_escollit, menu, mode):
@@ -27,13 +27,12 @@ def destrueixFinestra(mode_escollit, menu, mode):
         finestra_voltes.title = ("Selecció de voltes")
         finestra_voltes.geometry("400x400")
         finestra_voltes.configure(bg="#1a1a1a")
-        titol = Label(finestra_voltes, text="Selecciona el nombre de voltes que vols fer", font=("Helvetica", 24, "bold"), 
+        titol = Label(finestra_voltes, text="Selecciona el nombre\n de voltes que vols fer", font=("Helvetica", 18, "bold"), 
                    bg="#1a1a1a", fg="#00FF00", pady=20)
         titol.pack()
 
         selector = Scale(finestra_voltes, from_=1, to=50, orient=HORIZONTAL, 
                      bg="#1a1a1a", fg="white", highlightthickness=0, length=200)
-        #selector.set(3) 
         selector.pack(pady=20)
 
         Button(finestra_voltes, text="COMENÇAR!", font=("Helvetica", 12, "bold"),
@@ -45,6 +44,30 @@ def destrueixFinestra(mode_escollit, menu, mode):
         peu_de_pagina_guia.pack(side=BOTTOM)
 
         finestra_voltes.mainloop()
+    
+    if mode_escollit == 3:
+        finestra_vides = Tk()
+        finestra_vides.title = ("Selecció de vides")
+        finestra_vides.geometry("400x400")
+        finestra_vides.configure(bg="#1a1a1a")
+        titol = Label(finestra_vides, text="Selecciona el nombre \nde vides que vols tenir", font=("Helvetica", 18, "bold"), 
+                   bg="#1a1a1a", fg="#00FF00", pady=20)
+        titol.pack()
+
+        selector = Scale(finestra_vides, from_=1, to=25, orient=HORIZONTAL, 
+                     bg="#1a1a1a", fg="white", highlightthickness=0, length=200)
+        selector.set(10) 
+        selector.pack(pady=20)
+
+        Button(finestra_vides, text="COMENÇAR!", font=("Helvetica", 12, "bold"),
+           bg="#00FF00", fg="black", cursor="hand2",
+           command=lambda: confirmarVoltes(selector.get(), finestra_vides, mode)).pack(pady=10)
+
+        peu_de_pagina_guia = Label(finestra_vides, text="Tanqui la finestra per tornar a la selecció de mode", font=("Arial", 10), 
+                   bg="#1a1a1a", fg="gray", pady=20)
+        peu_de_pagina_guia.pack(side=BOTTOM)
+
+        finestra_vides.mainloop()
 
     if mode_escollit == 4:
         guia = Tk()
