@@ -7,7 +7,7 @@ def destrueixFinestra(vol_repetir,final,repeticio):
 def crearFinal(dades_finals,num_jugadors):
     final = Tk()
     final.title("Resultats finals")
-    final.geometry("400x400")
+    final.geometry("400x420")
     final.configure(bg="#1a1a1a")
 
     repeticio = [False]
@@ -36,15 +36,6 @@ def crearFinal(dades_finals,num_jugadors):
             Label(estadistiques, text=f"Voltes Totals: {dades_finals[1]}", font=("Consolas", 14), 
                 bg="#333333", fg="white").pack(anchor="w")
             
-        Button(final, text="Jugar de nou", font=("Helvetica", 14, "bold"),
-            bg="#00FF00", fg="black", activebackground="#00CC00",
-            width=20, cursor="hand2",
-            command=lambda: destrueixFinestra(True, final, repeticio)).pack(pady=20)
-
-        Button(final, text="Tancar el joc", font=("Helvetica", 12),
-            bg="#333333", fg="white", activebackground="red",
-            width=20, cursor="hand2",
-            command=lambda: destrueixFinestra(False, final, repeticio)).pack(pady=5)
         
     if num_jugadors == 2:
         if dades_finals[0] == 4:
@@ -52,7 +43,7 @@ def crearFinal(dades_finals,num_jugadors):
                     bg="#1a1a1a", fg="blue", pady=20).pack()
             
             Label(estadistiques, text=f"Jugador 1 (Cotxe Blau, WASD)\nTemps Total: {dades_finals[1]} s\nVoltes Totals: {dades_finals[2]}\nMillor Volta: {dades_finals[3]}\n"
-                                        f"Morts Totals: {dades_finals[4]}\n"
+                                        f"Morts Totals: {dades_finals[4]}\n\n"
                                         f"Jugador 2 (Cotxe Verd, Fletxes)\nTemps Total: {dades_finals[6]} s\nVoltes Totals: {dades_finals[7]}\nMillor Volta: {dades_finals[8]}\n"
                                         f"Morts Totals: {dades_finals[8]}", font=("Consolas", 10), 
                 bg="#333333", fg="white").pack(anchor="w")
@@ -75,16 +66,19 @@ def crearFinal(dades_finals,num_jugadors):
                                         f"Jugador 2 (Cotxe Verd, Fletxes)\nVoltes Totals: {dades_finals[3]}", font=("Consolas", 10), 
                 bg="#333333", fg="white").pack(anchor="w")
             
-        Button(final, text="Jugar de nou", font=("Helvetica", 14, "bold"),
+    btn1 = Button(final, text="Jugar de nou", font=("Helvetica", 14, "bold"),
             bg="#00FF00", fg="black", activebackground="#00CC00",
             width=20, cursor="hand2",
-            command=lambda: destrueixFinestra(True, final, repeticio)).pack(pady=20)
+            command=lambda: destrueixFinestra(True, final, repeticio))
+    btn1.pack(pady=20)
+        
 
-        Button(final, text="Tancar el joc", font=("Helvetica", 12),
+    btn2 = Button(final, text="Tancar el joc", font=("Helvetica", 12),
             bg="#333333", fg="white", activebackground="red",
             width=20, cursor="hand2",
-            command=lambda: destrueixFinestra(False, final, repeticio)).pack(pady=5)
-
+            command=lambda: destrueixFinestra(False, final, repeticio))
+    btn2.pack(pady=5)
+    
     final.mainloop()
 
     return repeticio[0]
